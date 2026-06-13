@@ -1,0 +1,9 @@
+export const RSS_SOURCES = [
+  { name: 'arXiv AI', url: 'https://rss.arxiv.org/rss/cs.AI' },
+  { name: 'arXiv ML', url: 'https://rss.arxiv.org/rss/cs.LG' },
+  { name: 'HuggingFace Blog', url: 'https://huggingface.co/blog/feed.xml' },
+  { name: 'Anthropic News', url: 'https://www.anthropic.com/news.rss' },
+  { name: 'OpenAI Blog', url: 'https://openai.com/blog/rss.xml' },
+]
+
+export const GITHUB_TRENDING_TOPICS = ['machine-learning', 'llm', 'ai', 'deep-learning']
