@@ -10,11 +10,19 @@ out/
 .env.local
 .env.*.local
 
+
+.claude
+CLAUDE.md
+docs
+
 # 브라우저 세션 쿠키 (절대 커밋 금지)
 .claude/browser-sessions/
 
 # 루프 로그 (로컬 전용)
 .claude/loop-logs/
+
+# TypeScript 빌드 캐시
+tsconfig.tsbuildinfo
 
 # 기타
 *.session.json
