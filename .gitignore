@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env
+.env.local
+.claude/browser-sessions/
+*.session.json
+
+.claude
+
+CLAUDE.md
+
+docs
