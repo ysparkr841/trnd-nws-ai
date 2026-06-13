@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Feed {
+  id          String   @id @default(cuid())
+  source      String   // "x" | "threads" | "rss" | "github"
+  sourceUrl   String
+  authorName  String?
+  authorHandle String?
+  content     String
+  summary     String?
+  repoUrl     String?
+  repoName    String?
+  isRead      Boolean  @default(false)
+  isBookmarked Boolean @default(false)
+  notionPageId String?
+  collectedAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([source, sourceUrl])
+  @@index([collectedAt(sort: Desc)])
+  @@index([source])
+}
