@@ -3,6 +3,10 @@ import { chromium } from 'playwright'
 import path from 'path'
 import { existsSync } from 'fs'
 
+const SESSION_PATH = path.join(process.cwd(), '.claude', 'browser-sessions', 'x-session.json')
+const FEED_URL = 'https://twitter.com/home'
+const MAX_POSTS = 20
+
 export interface XFeedItem {
   source: 'x'
   sourceUrl: string
@@ -12,56 +16,65 @@ export interface XFeedItem {
   collectedAt: Date
 }
 
-const SESSION_PATH = path.join(process.cwd(), '.claude', 'browser-sessions', 'x-session.json')
+export class XSessionExpiredError extends Error {
+  constructor() {
+    super('X 세션 만료 — scripts/save-x-session.ts 를 다시 실행하세요')
+    this.name = 'XSessionExpiredError'
+  }
+}
 
 export async function collectXFeeds(): Promise<XFeedItem[]> {
   if (!existsSync(SESSION_PATH)) {
-    console.warn('X 세션 없음. scripts/save-x-session.ts 먼저 실행 필요')
+    console.warn('X 세션 파일 없음 — 수집 건너뜀 (scripts/save-x-session.ts 실행 필요)')
     return []
   }
 
   const browser = await chromium.launch({ headless: true })
-  const context = await browser.newContext({ storageState: SESSION_PATH })
-  const page = await context.newPage()
-  const results: XFeedItem[] = []
-
   try {
-    await page.goto('https://twitter.com/home', { waitUntil: 'networkidle', timeout: 30000 })
+    const context = await browser.newContext({ storageState: SESSION_PATH })
+    const page = await context.newPage()
 
-    // 세션 만료 감지
-    if (page.url().includes('/login') || page.url().includes('/i/flow')) {
-      console.error('X 세션 만료 감지')
-      return []
+    await page.goto(FEED_URL, { waitUntil: 'domcontentloaded', timeout: 30000 })
+
+    const currentUrl = page.url()
+    if (currentUrl.includes('/login') || currentUrl.includes('/i/flow/login')) {
+      throw new XSessionExpiredError()
     }
 
-    // 트윗 수집 (셀렉터는 X 구조 변경 시 수동 업데이트 필요)
-    await page.waitForSelector('[data-testid="tweet"]', { timeout: 15000 })
-    const tweets = await page.locator('[data-testid="tweet"]').all()
+    await page.waitForSelector('[data-testid="tweet"]', { timeout: 20000 })
 
-    for (const tweet of tweets.slice(0, 30)) {
-      try {
-        const text = await tweet.locator('[data-testid="tweetText"]').textContent()
-        const handle = await tweet.locator('[data-testid="User-Name"] a').first().getAttribute('href')
-        const name = await tweet.locator('[data-testid="User-Name"]').first().textContent()
-        const tweetLink = await tweet.locator('a[href*="/status/"]').first().getAttribute('href')
+    const rawItems = await page.evaluate((maxPosts: number) => {
+      const tweets = Array.from(document.querySelectorAll('[data-testid="tweet"]')).slice(0, maxPosts)
+      return tweets.map((tweet) => {
+        const nameEl = tweet.querySelector('[data-testid="User-Name"]')
+        // status 링크: /username/status/id 형태
+        const statusLink = tweet.querySelector('a[href*="/status/"]') as HTMLAnchorElement | null
+        const contentEl = tweet.querySelector('[data-testid="tweetText"]')
+        const timeEl = tweet.querySelector('time')
 
-        if (!text || !handle) continue
+        const href = statusLink?.getAttribute('href') ?? ''
+        const handleMatch = href.match(/^\/([^/]+)\/status\//)
+        const handle = handleMatch ? handleMatch[1] : ''
 
-        results.push({
-          source: 'x',
-          sourceUrl: `https://twitter.com${tweetLink ?? ''}`,
-          authorHandle: handle.replace('/', ''),
-          authorName: name ?? '',
-          content: text,
-          collectedAt: new Date(),
-        })
-      } catch {
-        // 개별 트윗 파싱 실패는 건너뜀
-      }
-    }
+        return {
+          authorName: nameEl?.querySelector('span')?.textContent?.trim() ?? handle,
+          authorHandle: handle ? `@${handle}` : '',
+          content: contentEl?.textContent?.trim() ?? '',
+          sourceUrl: href ? `https://twitter.com${href}` : '',
+          collectedAt: timeEl?.getAttribute('datetime') ?? '',
+        }
+      }).filter((item) => item.content && item.sourceUrl)
+    }, MAX_POSTS)
+
+    return rawItems.map((item) => ({
+      source: 'x' as const,
+      sourceUrl: item.sourceUrl,
+      authorName: item.authorName,
+      authorHandle: item.authorHandle,
+      content: item.content,
+      collectedAt: item.collectedAt ? new Date(item.collectedAt) : new Date(),
+    }))
   } finally {
     await browser.close()
   }
-
-  return results
 }

@@ -1,0 +1,88 @@
+{
+  "topic": "Anthropic $965B IPO 준비",
+  "date": "2026-06-14",
+  "cards": [
+    {
+      "index": 1,
+      "type": "cover",
+      "title": "OpenAI를 제쳤다",
+      "subtitle": "Anthropic, 기업가치 $965B으로 AI 역사 새로 쓰다",
+      "visual_hint": "Anthropic 로고와 달러 사인이 상승하는 그래프 이미지",
+      "hashtags": ["#AI", "#Anthropic", "#IPO", "#Claude"]
+    },
+    {
+      "index": 2,
+      "type": "intro",
+      "title": "Anthropic이 뭔가요?",
+      "body": "2021년 OpenAI 출신 연구자들이 설립한 AI 안전 스타트업. '안전한 AI'를 목표로 만든 Claude 모델 시리즈로 기업 시장 공략. ChatGPT의 강력한 경쟁자.",
+      "highlight": "창업자 Dario Amodei는 OpenAI 전 VP",
+      "visual_hint": "Anthropic 창업팀 소개 이미지"
+    },
+    {
+      "index": 3,
+      "type": "event",
+      "title": "Series H — $65B 조달 완료",
+      "date": "2026-05-28",
+      "body": "Altimeter Capital·Sequoia·Dragoneer·Greenoaks 주도로 $65B 투자 유치. 기업가치 $965B 확정 — OpenAI($852B)를 역사상 처음으로 추월.",
+      "key_number": "$965B",
+      "key_number_desc": "기업가치 (약 1,300조 원)",
+      "visual_hint": "막대 그래프: Anthropic $965B vs OpenAI $852B 비교"
+    },
+    {
+      "index": 4,
+      "type": "event",
+      "title": "매출 런레이트 $47B 돌파",
+      "date": "2026-05",
+      "body": "2026년 1월 $9B → 5월 $47B. 단 5개월 만에 5배 성장. 2024년 1월($87M) 대비 2년 반 만에 540배 증가.",
+      "key_number": "5배",
+      "key_number_desc": "5개월 만의 매출 성장",
+      "visual_hint": "로켓형 성장 그래프 — $87M → $9B → $47B 타임라인"
+    },
+    {
+      "index": 5,
+      "type": "event",
+      "title": "IPO S-1 기밀 제출 — 10월 NASDAQ 상장 목표",
+      "date": "2026-06-01",
+      "body": "라운드 완료 4일 만에 미국 SEC에 S-1 기밀 제출. 10월 NASDAQ 상장 예정. 월가 역사상 최대 규모 테크 IPO 중 하나가 될 전망. OpenAI(4분기 예정)보다 먼저 상장 가능성 높아짐.",
+      "key_number": "10월",
+      "key_number_desc": "NASDAQ 상장 목표 시기",
+      "visual_hint": "NYSE/NASDAQ 빌딩 이미지 + 상장 날짜 카운트다운"
+    },
+    {
+      "index": 6,
+      "type": "event",
+      "title": "Claude Code — 성장의 비밀 병기",
+      "date": "2025 하반기~2026",
+      "body": "2025년 중반 출시된 AI 코딩 에이전트 Claude Code. 출시 6개월 만에 $1B ARR 달성 — Anthropic 역사상 가장 빠른 제품 성장. 개발자가 직접 코드 작성·디버깅·기능 구현까지 맡기는 에이전트 방식.",
+      "key_number": "$1B ARR",
+      "key_number_desc": "출시 6개월 만에 달성",
+      "visual_hint": "터미널 화면에 코드가 자동으로 작성되는 애니메이션 스크린샷"
+    },
+    {
+      "index": 7,
+      "type": "outro",
+      "title": "우리에게 주는 3가지 시사점",
+      "points": [
+        "① AI 에이전트 시대 본격 개막 — '대신 일해주는 AI'가 진짜 돈이 된다",
+        "② 안전한 AI = 기업 신뢰 = 비즈니스 우위 — Anthropic의 전략이 증명",
+        "③ AI가 공개 자본 시장의 정식 자산군으로 — $1조짜리 AI 기업 IPO가 현실"
+      ],
+      "cta": "저장하고 동료에게 공유해보세요",
+      "visual_hint": "밝은 배경에 3가지 포인트 아이콘과 텍스트"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Fortune — Anthropic IPO S-1 제출",
+      "url": "https://fortune.com/2026/06/01/anthropic-confidentially-files-ipo-965-billion-valuation/"
+    },
+    {
+      "title": "CNBC — Anthropic, OpenAI 제치고 최고 AI 스타트업",
+      "url": "https://www.cnbc.com/2026/05/28/anthropic-open-ai-startup-value.html"
+    },
+    {
+      "title": "Simon Willison — 런레이트 $47B",
+      "url": "https://simonwillison.net/2026/May/29/anthropic/"
+    }
+  ]
+}
