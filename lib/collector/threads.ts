@@ -3,6 +3,10 @@ import { chromium } from 'playwright'
 import path from 'path'
 import { existsSync } from 'fs'
 
+const SESSION_PATH = path.join(process.cwd(), '.claude', 'browser-sessions', 'threads-session.json')
+const FEED_URL = 'https://www.threads.net/'
+const MAX_POSTS = 20
+
 export interface ThreadsFeedItem {
   source: 'threads'
   sourceUrl: string
@@ -12,55 +16,81 @@ export interface ThreadsFeedItem {
   collectedAt: Date
 }
 
-const SESSION_PATH = path.join(process.cwd(), '.claude', 'browser-sessions', 'threads-session.json')
+export class ThreadsSessionExpiredError extends Error {
+  constructor() {
+    super('Threads 세션 만료 — scripts/save-threads-session.ts 를 다시 실행하세요')
+    this.name = 'ThreadsSessionExpiredError'
+  }
+}
 
 export async function collectThreadsFeeds(): Promise<ThreadsFeedItem[]> {
   if (!existsSync(SESSION_PATH)) {
-    console.warn('스레드 세션 없음. scripts/save-threads-session.ts 먼저 실행 필요')
+    console.warn('Threads 세션 파일 없음 — 수집 건너뜀 (scripts/save-threads-session.ts 실행 필요)')
     return []
   }
 
   const browser = await chromium.launch({ headless: true })
-  const context = await browser.newContext({ storageState: SESSION_PATH })
-  const page = await context.newPage()
-  const results: ThreadsFeedItem[] = []
-
   try {
-    await page.goto('https://www.threads.net/', { waitUntil: 'networkidle', timeout: 30000 })
+    const context = await browser.newContext({ storageState: SESSION_PATH })
+    const page = await context.newPage()
 
-    if (page.url().includes('/login')) {
-      console.error('스레드 세션 만료 감지')
-      return []
+    await page.goto(FEED_URL, { waitUntil: 'domcontentloaded', timeout: 30000 })
+
+    const currentUrl = page.url()
+    if (currentUrl.includes('/login') || currentUrl.includes('accounts/login')) {
+      throw new ThreadsSessionExpiredError()
     }
 
-    // 스레드 게시물 수집 (셀렉터는 Threads 구조 변경 시 수동 업데이트 필요)
-    await page.waitForSelector('article', { timeout: 15000 })
-    const posts = await page.locator('article').all()
+    // post permalink 링크가 로드될 때까지 대기
+    await page.waitForSelector('a[href*="/post/"]', { timeout: 20000 })
 
-    for (const post of posts.slice(0, 30)) {
-      try {
-        const text = await post.locator('[dir="auto"]').first().textContent()
-        const handle = await post.locator('a[href*="/@"]').first().getAttribute('href')
-        const name = await post.locator('strong').first().textContent()
-        const postLink = await post.locator('a[href*="/post/"]').first().getAttribute('href')
+    const rawItems = await page.evaluate((maxPosts: number) => {
+      // /@username/post/id 패턴의 링크로 포스트 식별
+      const postLinks = Array.from(document.querySelectorAll('a[href*="/post/"]'))
+        .filter((a) => /^\/@[^/]+\/post\//.test((a as HTMLAnchorElement).getAttribute('href') ?? ''))
+        .slice(0, maxPosts)
 
-        if (!text) continue
+      return postLinks.map((link) => {
+        const href = (link as HTMLAnchorElement).getAttribute('href') ?? ''
+        const handleMatch = href.match(/^\/@([^/]+)\/post\//)
+        const handle = handleMatch ? handleMatch[1] : ''
 
-        results.push({
-          source: 'threads',
-          sourceUrl: `https://www.threads.net${postLink ?? ''}`,
-          authorHandle: handle?.replace('/@', '') ?? '',
-          authorName: name ?? '',
-          content: text,
-          collectedAt: new Date(),
-        })
-      } catch {
-        // 개별 포스트 파싱 실패는 건너뜀
-      }
-    }
+        // 가장 가까운 article 또는 role=article 컨테이너에서 텍스트 추출
+        const container =
+          link.closest('article') ??
+          link.closest('[role="article"]') ??
+          link.parentElement
+
+        const paragraphs = container
+          ? Array.from(container.querySelectorAll('p, span[dir]'))
+          : []
+        const content = paragraphs
+          .map((p) => p.textContent?.trim())
+          .filter(Boolean)
+          .join(' ')
+          .slice(0, 500)
+
+        const timeEl = container?.querySelector('time')
+
+        return {
+          authorName: handle,
+          authorHandle: `@${handle}`,
+          content,
+          sourceUrl: `https://www.threads.net${href}`,
+          collectedAt: timeEl?.getAttribute('datetime') ?? '',
+        }
+      }).filter((item) => item.content && item.sourceUrl)
+    }, MAX_POSTS)
+
+    return rawItems.map((item) => ({
+      source: 'threads' as const,
+      sourceUrl: item.sourceUrl,
+      authorName: item.authorName,
+      authorHandle: item.authorHandle,
+      content: item.content,
+      collectedAt: item.collectedAt ? new Date(item.collectedAt) : new Date(),
+    }))
   } finally {
     await browser.close()
   }
-
-  return results
 }
