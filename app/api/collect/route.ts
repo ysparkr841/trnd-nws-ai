@@ -4,7 +4,22 @@ import { collectGithubTrending } from '@/lib/collector/github'
 import { collectXFeeds, XSessionExpiredError } from '@/lib/collector/x'
 import { collectThreadsFeeds, ThreadsSessionExpiredError } from '@/lib/collector/threads'
 import { detectGithubRepos } from '@/lib/parser/repo-detect'
+import { fetchRepoDetails } from '@/lib/parser/content'
 import { db } from '@/lib/db'
+
+async function resolveRepoFields(text: string) {
+  const repos = detectGithubRepos(text)
+  if (!repos[0]) return { repoUrl: null, repoName: null, repoStars: null, repoLanguage: null, repoReadme: null }
+  const { owner, name, url } = repos[0]
+  const details = await fetchRepoDetails(owner, name)
+  return {
+    repoUrl: url,
+    repoName: `${owner}/${name}`,
+    repoStars: details?.stars ?? null,
+    repoLanguage: details?.language ?? null,
+    repoReadme: details?.readme ?? null,
+  }
+}
 
 export async function POST() {
   const stats = { rss: 0, github: 0, x: 0, threads: 0, errors: [] as string[] }
@@ -13,7 +28,7 @@ export async function POST() {
   try {
     const rssItems = await collectRssFeeds()
     for (const item of rssItems) {
-      const repos = detectGithubRepos(item.content)
+      const repoFields = await resolveRepoFields(item.content)
       try {
         await db.feed.upsert({
           where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
@@ -22,9 +37,8 @@ export async function POST() {
             sourceUrl: item.sourceUrl,
             authorName: item.authorName,
             content: item.content,
-            repoUrl: repos[0]?.url ?? null,
-            repoName: repos[0] ? `${repos[0].owner}/${repos[0].name}` : null,
             collectedAt: item.collectedAt,
+            ...repoFields,
           },
           update: {},
         })
@@ -67,7 +81,7 @@ export async function POST() {
   try {
     const xItems = await collectXFeeds()
     for (const item of xItems) {
-      const repos = detectGithubRepos(item.content)
+      const repoFields = await resolveRepoFields(item.content)
       try {
         await db.feed.upsert({
           where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
@@ -77,9 +91,8 @@ export async function POST() {
             authorName: item.authorName,
             authorHandle: item.authorHandle,
             content: item.content,
-            repoUrl: repos[0]?.url ?? null,
-            repoName: repos[0] ? `${repos[0].owner}/${repos[0].name}` : null,
             collectedAt: item.collectedAt,
+            ...repoFields,
           },
           update: {},
         })
@@ -100,7 +113,7 @@ export async function POST() {
   try {
     const threadsItems = await collectThreadsFeeds()
     for (const item of threadsItems) {
-      const repos = detectGithubRepos(item.content)
+      const repoFields = await resolveRepoFields(item.content)
       try {
         await db.feed.upsert({
           where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
@@ -110,9 +123,8 @@ export async function POST() {
             authorName: item.authorName,
             authorHandle: item.authorHandle,
             content: item.content,
-            repoUrl: repos[0]?.url ?? null,
-            repoName: repos[0] ? `${repos[0].owner}/${repos[0].name}` : null,
             collectedAt: item.collectedAt,
+            ...repoFields,
           },
           update: {},
         })

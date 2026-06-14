@@ -15,9 +15,12 @@ model Feed {
   authorHandle String?
   content     String
   summary     String?
-  repoUrl     String?
-  repoName    String?
-  isRead      Boolean  @default(false)
+  repoUrl      String?
+  repoName     String?
+  repoStars    Int?
+  repoLanguage String?
+  repoReadme   String?
+  isRead       Boolean  @default(false)
   isBookmarked Boolean @default(false)
   notionPageId String?
   collectedAt DateTime
