@@ -10,6 +10,10 @@ export interface GithubTrendingItem {
   repoUrl: string
   content: string
   collectedAt: Date
+  repoStars: number
+  repoLanguage: string | null
+  repoDescription: string | null
+  repoTopics: string[]
 }
 
 export async function collectGithubTrending(): Promise<GithubTrendingItem[]> {
@@ -36,6 +40,10 @@ export async function collectGithubTrending(): Promise<GithubTrendingItem[]> {
           repoUrl: repo.html_url,
           content: `${repo.full_name}: ${repo.description ?? '설명 없음'}`,
           collectedAt: new Date(),
+          repoStars: repo.stargazers_count,
+          repoLanguage: repo.language ?? null,
+          repoDescription: repo.description ?? null,
+          repoTopics: repo.topics ?? [],
         })
       }
     } catch (err) {

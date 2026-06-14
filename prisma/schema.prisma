@@ -21,6 +21,7 @@ model Feed {
   repoStars    Int?
   repoLanguage String?
   repoReadme   String?
+  repoSummary  String?
   isRead       Boolean  @default(false)
   isBookmarked Boolean @default(false)
   notionPageId String?

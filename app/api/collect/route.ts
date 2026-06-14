@@ -5,21 +5,33 @@ import { collectXFeeds, XSessionExpiredError } from '@/lib/collector/x'
 import { collectThreadsFeeds, ThreadsSessionExpiredError } from '@/lib/collector/threads'
 import { detectGithubRepos } from '@/lib/parser/repo-detect'
 import { fetchRepoDetails } from '@/lib/parser/content'
+import { summarizeRepoWithOllama } from '@/lib/ai/ollama'
 import { normalizeUrl, urlHash } from '@/lib/util/url'
 import { appendBlockingQuestion } from '@/lib/util/state'
 import { db } from '@/lib/db'
 
 async function resolveRepoFields(text: string) {
   const repos = detectGithubRepos(text)
-  if (!repos[0]) return { repoUrl: null, repoName: null, repoStars: null, repoLanguage: null, repoReadme: null }
+  if (!repos[0]) return { repoUrl: null, repoName: null, repoStars: null, repoLanguage: null, repoReadme: null, repoSummary: null }
   const { owner, name, url } = repos[0]
   const details = await fetchRepoDetails(owner, name)
+  if (!details) return { repoUrl: url, repoName: `${owner}/${name}`, repoStars: null, repoLanguage: null, repoReadme: null, repoSummary: null }
+
+  const repoSummary = await summarizeRepoWithOllama({
+    name: `${owner}/${name}`,
+    description: details.description,
+    language: details.language,
+    topics: details.topics,
+    readme: details.readme,
+  })
+
   return {
     repoUrl: url,
     repoName: `${owner}/${name}`,
-    repoStars: details?.stars ?? null,
-    repoLanguage: details?.language ?? null,
-    repoReadme: details?.readme ?? null,
+    repoStars: details.stars,
+    repoLanguage: details.language,
+    repoReadme: details.readme,
+    repoSummary,
   }
 }
 
@@ -62,6 +74,13 @@ export async function POST() {
     for (const item of ghItems) {
       const normalizedUrl = normalizeUrl(item.sourceUrl)
       const hash = urlHash(item.sourceUrl)
+      const repoSummary = await summarizeRepoWithOllama({
+        name: item.repoName,
+        description: item.repoDescription,
+        language: item.repoLanguage,
+        topics: item.repoTopics,
+        readme: '',
+      })
       try {
         await db.feed.upsert({
           where: { source_sourceUrl: { source: item.source, sourceUrl: normalizedUrl } },
@@ -71,6 +90,9 @@ export async function POST() {
             urlHash: hash,
             repoName: item.repoName,
             repoUrl: item.repoUrl,
+            repoStars: item.repoStars,
+            repoLanguage: item.repoLanguage,
+            repoSummary,
             content: item.content,
             collectedAt: item.collectedAt,
           },
