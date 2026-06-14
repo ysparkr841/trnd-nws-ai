@@ -5,6 +5,14 @@ import type { FeedItem } from './types'
 import { FeedCard } from './FeedCard'
 import { RepoCard } from './RepoCard'
 
+const SOURCES = [
+  { key: '', label: '전체' },
+  { key: 'x', label: 'X' },
+  { key: 'threads', label: 'Threads' },
+  { key: 'rss', label: 'RSS' },
+  { key: 'github', label: 'GitHub' },
+]
+
 interface Props {
   initialFeeds: FeedItem[]
   initialCursor: string | null
@@ -14,25 +22,43 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
   const [feeds, setFeeds] = useState(initialFeeds)
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(!initialCursor)
-  const cursorRef = useRef(initialCursor)
+  const [source, setSource] = useState('')
+
+  const cursorRef = useRef<string | null>(initialCursor)
+  const sourceRef = useRef('')
   const loadingRef = useRef(false)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  const loadMore = useCallback(async () => {
-    if (loadingRef.current || !cursorRef.current) return
+  const fetchPage = useCallback(async (cursor: string | null, src: string, reset: boolean) => {
+    if (loadingRef.current) return
     loadingRef.current = true
     setLoading(true)
     try {
-      const res = await fetch(`/api/feeds?cursor=${cursorRef.current}`)
+      const params = new URLSearchParams()
+      if (cursor) params.set('cursor', cursor)
+      if (src) params.set('source', src)
+      const res = await fetch(`/api/feeds?${params}`)
       const data: { items: FeedItem[]; nextCursor: string | null } = await res.json()
-      setFeeds((prev) => [...prev, ...data.items])
+      setFeeds((prev) => reset ? data.items : [...prev, ...data.items])
       cursorRef.current = data.nextCursor
-      if (!data.nextCursor) setDone(true)
+      setDone(!data.nextCursor)
     } finally {
       loadingRef.current = false
       setLoading(false)
     }
   }, [])
+
+  const loadMore = useCallback(() => {
+    if (!cursorRef.current) return
+    fetchPage(cursorRef.current, sourceRef.current, false)
+  }, [fetchPage])
+
+  const handleSourceChange = useCallback((src: string) => {
+    sourceRef.current = src
+    setSource(src)
+    cursorRef.current = null
+    fetchPage(null, src, true)
+  }, [fetchPage])
 
   useEffect(() => {
     const el = sentinelRef.current
@@ -45,27 +71,56 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
     return () => observer.disconnect()
   }, [loadMore])
 
-  if (feeds.length === 0) {
-    return (
-      <div className="text-center py-16 text-gray-400">
-        <p className="text-lg">피드가 없습니다</p>
-        <p className="text-sm mt-1">수집 버튼을 눌러 RSS/GitHub 소식을 가져오세요.</p>
-      </div>
-    )
-  }
+  const toggleField = useCallback(async (id: string, field: 'isRead' | 'isBookmarked', value: boolean) => {
+    setFeeds((prev) => prev.map((f) => f.id === id ? { ...f, [field]: value } : f))
+    try {
+      await fetch('/api/feeds', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, field, value }),
+      })
+    } catch {
+      setFeeds((prev) => prev.map((f) => f.id === id ? { ...f, [field]: !value } : f))
+    }
+  }, [])
 
   return (
-    <div className="space-y-3">
-      {feeds.map((feed) =>
-        feed.source === 'github' && feed.repoName ? (
-          <RepoCard key={feed.id} feed={feed} />
-        ) : (
-          <FeedCard key={feed.id} feed={feed} />
-        )
-      )}
-      <div ref={sentinelRef} className="py-6 text-center text-sm text-gray-400">
-        {loading ? '불러오는 중...' : done ? '모든 피드를 불러왔습니다' : null}
+    <div>
+      <div className="flex gap-1 mb-4 flex-wrap">
+        {SOURCES.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => handleSourceChange(key)}
+            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+              source === key
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
+
+      {feeds.length === 0 && !loading ? (
+        <div className="text-center py-16 text-gray-400">
+          <p className="text-lg">피드가 없습니다</p>
+          <p className="text-sm mt-1">수집 버튼을 눌러 RSS/GitHub 소식을 가져오세요.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {feeds.map((feed) =>
+            feed.source === 'github' && feed.repoName ? (
+              <RepoCard key={feed.id} feed={feed} onToggle={toggleField} />
+            ) : (
+              <FeedCard key={feed.id} feed={feed} onToggle={toggleField} />
+            )
+          )}
+          <div ref={sentinelRef} className="py-6 text-center text-sm text-gray-400">
+            {loading ? '불러오는 중...' : done ? '모든 피드를 불러왔습니다' : null}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
