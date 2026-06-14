@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { saveRepoToNotion } from '@/lib/notion/sync'
+import { saveRepoToNotion, flushNotionQueue } from '@/lib/notion/sync'
 import { db } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
@@ -24,4 +24,9 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ notionPageId })
+}
+
+export async function PATCH() {
+  const result = await flushNotionQueue()
+  return NextResponse.json(result)
 }
