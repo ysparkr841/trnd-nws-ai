@@ -15,6 +15,7 @@ model Feed {
   authorHandle String?
   content     String
   summary     String?
+  urlHash      String?
   repoUrl      String?
   repoName     String?
   repoStars    Int?
@@ -28,6 +29,7 @@ model Feed {
   updatedAt   DateTime @updatedAt
 
   @@unique([source, sourceUrl])
+  @@index([urlHash])
   @@index([collectedAt(sort: Desc)])
   @@index([source])
 }

@@ -5,6 +5,8 @@ import { collectXFeeds, XSessionExpiredError } from '@/lib/collector/x'
 import { collectThreadsFeeds, ThreadsSessionExpiredError } from '@/lib/collector/threads'
 import { detectGithubRepos } from '@/lib/parser/repo-detect'
 import { fetchRepoDetails } from '@/lib/parser/content'
+import { normalizeUrl, urlHash } from '@/lib/util/url'
+import { appendBlockingQuestion } from '@/lib/util/state'
 import { db } from '@/lib/db'
 
 async function resolveRepoFields(text: string) {
@@ -29,12 +31,15 @@ export async function POST() {
     const rssItems = await collectRssFeeds()
     for (const item of rssItems) {
       const repoFields = await resolveRepoFields(item.content)
+      const normalizedUrl = normalizeUrl(item.sourceUrl)
+      const hash = urlHash(item.sourceUrl)
       try {
         await db.feed.upsert({
-          where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
+          where: { source_sourceUrl: { source: item.source, sourceUrl: normalizedUrl } },
           create: {
             source: item.source,
-            sourceUrl: item.sourceUrl,
+            sourceUrl: normalizedUrl,
+            urlHash: hash,
             authorName: item.authorName,
             content: item.content,
             collectedAt: item.collectedAt,
@@ -55,12 +60,15 @@ export async function POST() {
   try {
     const ghItems = await collectGithubTrending()
     for (const item of ghItems) {
+      const normalizedUrl = normalizeUrl(item.sourceUrl)
+      const hash = urlHash(item.sourceUrl)
       try {
         await db.feed.upsert({
-          where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
+          where: { source_sourceUrl: { source: item.source, sourceUrl: normalizedUrl } },
           create: {
             source: item.source,
-            sourceUrl: item.sourceUrl,
+            sourceUrl: normalizedUrl,
+            urlHash: hash,
             repoName: item.repoName,
             repoUrl: item.repoUrl,
             content: item.content,
@@ -82,12 +90,15 @@ export async function POST() {
     const xItems = await collectXFeeds()
     for (const item of xItems) {
       const repoFields = await resolveRepoFields(item.content)
+      const normalizedUrl = normalizeUrl(item.sourceUrl)
+      const hash = urlHash(item.sourceUrl)
       try {
         await db.feed.upsert({
-          where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
+          where: { source_sourceUrl: { source: item.source, sourceUrl: normalizedUrl } },
           create: {
             source: item.source,
-            sourceUrl: item.sourceUrl,
+            sourceUrl: normalizedUrl,
+            urlHash: hash,
             authorName: item.authorName,
             authorHandle: item.authorHandle,
             content: item.content,
@@ -104,6 +115,10 @@ export async function POST() {
   } catch (err) {
     if (err instanceof XSessionExpiredError) {
       stats.errors.push('X 세션 만료')
+      appendBlockingQuestion(
+        'X 세션이 만료되었습니다. scripts/save-x-session.ts를 실행해 세션을 갱신해주세요.',
+        'X 피드 수집'
+      )
     } else {
       stats.errors.push(`X 수집: ${String(err)}`)
     }
@@ -114,12 +129,15 @@ export async function POST() {
     const threadsItems = await collectThreadsFeeds()
     for (const item of threadsItems) {
       const repoFields = await resolveRepoFields(item.content)
+      const normalizedUrl = normalizeUrl(item.sourceUrl)
+      const hash = urlHash(item.sourceUrl)
       try {
         await db.feed.upsert({
-          where: { source_sourceUrl: { source: item.source, sourceUrl: item.sourceUrl } },
+          where: { source_sourceUrl: { source: item.source, sourceUrl: normalizedUrl } },
           create: {
             source: item.source,
-            sourceUrl: item.sourceUrl,
+            sourceUrl: normalizedUrl,
+            urlHash: hash,
             authorName: item.authorName,
             authorHandle: item.authorHandle,
             content: item.content,
@@ -136,6 +154,10 @@ export async function POST() {
   } catch (err) {
     if (err instanceof ThreadsSessionExpiredError) {
       stats.errors.push('Threads 세션 만료')
+      appendBlockingQuestion(
+        'Threads 세션이 만료되었습니다. scripts/save-threads-session.ts를 실행해 세션을 갱신해주세요.',
+        'Threads 피드 수집'
+      )
     } else {
       stats.errors.push(`Threads 수집: ${String(err)}`)
     }
