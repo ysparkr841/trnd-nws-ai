@@ -15,11 +15,18 @@ function timeAgo(date: Date): string {
   return `${Math.floor(seconds / 86400)}일 전`
 }
 
-export function FeedCard({ feed }: { feed: FeedItem }) {
+interface Props {
+  feed: FeedItem
+  onToggle?: (id: string, field: 'isRead' | 'isBookmarked', value: boolean) => void
+}
+
+export function FeedCard({ feed, onToggle }: Props) {
   const source = SOURCE_LABELS[feed.source] ?? { label: feed.source, className: 'bg-gray-400 text-white' }
 
   return (
-    <article className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 transition-colors">
+    <article className={`bg-white rounded-lg border p-4 transition-colors ${
+      feed.isRead ? 'border-gray-100 opacity-60' : 'border-gray-200 hover:border-gray-300'
+    }`}>
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-2 flex-wrap">
           <span className={`text-xs font-medium px-2 py-0.5 rounded ${source.className}`}>
@@ -29,7 +36,27 @@ export function FeedCard({ feed }: { feed: FeedItem }) {
             <span className="text-sm text-gray-500">{feed.authorName}</span>
           )}
         </div>
-        <span className="text-xs text-gray-400 shrink-0">{timeAgo(feed.collectedAt)}</span>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => onToggle?.(feed.id, 'isBookmarked', !feed.isBookmarked)}
+            className={`text-base leading-none transition-colors ${
+              feed.isBookmarked ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-400'
+            }`}
+            title={feed.isBookmarked ? '북마크 해제' : '북마크'}
+          >
+            {feed.isBookmarked ? '★' : '☆'}
+          </button>
+          <button
+            onClick={() => onToggle?.(feed.id, 'isRead', !feed.isRead)}
+            className={`text-xs font-medium transition-colors ${
+              feed.isRead ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+            }`}
+            title={feed.isRead ? '안읽음으로 표시' : '읽음으로 표시'}
+          >
+            {feed.isRead ? '읽음' : '읽기'}
+          </button>
+          <span className="text-xs text-gray-400">{timeAgo(feed.collectedAt)}</span>
+        </div>
       </div>
 
       <p className="text-sm text-gray-800 leading-relaxed line-clamp-3">
