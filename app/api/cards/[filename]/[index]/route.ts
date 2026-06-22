@@ -15,7 +15,7 @@ export async function GET(
 ) {
   const { filename, index: indexStr } = await params
 
-  if (/[./\\]/.test(filename) || !filename.endsWith('.json')) {
+  if (/\.\.|[/\\]/.test(filename) || !filename.endsWith('.json')) {
     return NextResponse.json({ error: 'invalid filename' }, { status: 400 })
   }
 

@@ -10,7 +10,7 @@ interface ContentItem {
   topic: string
 }
 
-function parseFilename(filename: string): ContentItem {
+export function parseFilename(filename: string): ContentItem {
   const base = filename.replace(/\.(md|json)$/, '')
   const match = base.match(/^(\d{4}-\d{2}-\d{2})-(.+)$/)
   if (!match) return { filename, date: '', topic: base }
