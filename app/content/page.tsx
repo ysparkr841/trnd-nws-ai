@@ -1,6 +1,7 @@
-import { readdir } from 'fs/promises'
+import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import Link from 'next/link'
+import { evaluateContent, type QualityResult } from '@/lib/util/content-quality'
 
 const CONTENT_DIR = path.join(process.cwd(), 'content')
 
@@ -8,25 +9,61 @@ interface ContentItem {
   filename: string
   date: string
   topic: string
+  quality: QualityResult | null
 }
 
-function parseFilename(filename: string): ContentItem {
+function parseFilename(filename: string): Pick<ContentItem, 'filename' | 'date' | 'topic'> {
   const base = filename.replace(/\.(md|json)$/, '')
   const match = base.match(/^(\d{4}-\d{2}-\d{2})-(.+)$/)
   if (!match) return { filename, date: '', topic: base }
   return { filename, date: match[1], topic: match[2].replace(/-/g, ' ') }
 }
 
-async function listContent(subdir: string): Promise<ContentItem[]> {
+async function listContent(
+  subdir: 'articles' | 'scripts' | 'cards',
+): Promise<ContentItem[]> {
   try {
-    const files = await readdir(path.join(CONTENT_DIR, subdir))
-    return files
-      .filter((f) => !f.startsWith('.'))
-      .map(parseFilename)
-      .sort((a, b) => b.date.localeCompare(a.date))
+    const dir = path.join(CONTENT_DIR, subdir)
+    const files = await readdir(dir)
+    const items = await Promise.all(
+      files
+        .filter((f) => !f.startsWith('.'))
+        .map(async (filename) => {
+          const base = parseFilename(filename)
+          let quality: QualityResult | null = null
+          try {
+            const content = await readFile(path.join(dir, filename), 'utf-8')
+            quality = evaluateContent(subdir, content)
+          } catch {
+            // ignore unreadable files
+          }
+          return { ...base, quality }
+        }),
+    )
+    return items.sort((a, b) => b.date.localeCompare(a.date))
   } catch {
     return []
   }
+}
+
+const GRADE_STYLE: Record<string, string> = {
+  A: 'bg-green-100 text-green-700',
+  B: 'bg-blue-100 text-blue-700',
+  C: 'bg-amber-100 text-amber-700',
+  D: 'bg-red-100 text-red-700',
+}
+
+function GradeBadge({ quality }: { quality: QualityResult | null }) {
+  if (!quality) return null
+  const style = GRADE_STYLE[quality.grade] ?? ''
+  return (
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${style}`}
+      title={`통과: ${quality.passed.join(', ')}${quality.failed.length ? ` | 미통과: ${quality.failed.join(', ')}` : ''}`}
+    >
+      {quality.grade} ({quality.score}/4)
+    </span>
+  )
 }
 
 function ContentSection({
@@ -50,10 +87,13 @@ function ContentSection({
           {items.map((item) => (
             <div
               key={item.filename}
-              className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between"
+              className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between gap-3"
             >
-              <div>
-                <p className="text-sm font-medium text-gray-900 capitalize">{item.topic}</p>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-sm font-medium text-gray-900 capitalize">{item.topic}</p>
+                  <GradeBadge quality={item.quality} />
+                </div>
                 <p className="text-xs text-gray-400 mt-0.5">{item.date}</p>
               </div>
               <a
