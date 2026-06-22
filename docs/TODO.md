@@ -1,80 +1,81 @@
-# TODO.md — AI 뉴스 허브 백로그
+﻿# TODO.md ??AI ?댁뒪 ?덈툕 諛깅줈洹?
 
-## P0 — Critical (MVP 필수)
+## P0 ??Critical (MVP ?꾩닔)
 
-### 셋업
-- [x] Next.js 14 프로젝트 초기화 (TypeScript + Tailwind + ESLint)
-- [x] Prisma + SQLite 스키마 및 Prisma 싱글턴 (lib/db.ts) — postgresql→sqlite 전환 완료
-- [x] DATABASE_URL 설정 (file:./dev.db), NOTION_API_KEY/DB_ID 설정 완료
-- [x] prisma db push — dev.db 생성 완료
-- [x] npx prisma generate — 클라이언트 재생성 완료
-- [x] Playwright 설치 및 브라우저 바이너리 설치 — chromium 1223 확인 완료
-- [x] Ollama 연동 테스트 (llama3.2:3b) — summarizeRepoWithOllama 구현 완료
+### ?뗭뾽
+- [x] Next.js 14 ?꾨줈?앺듃 珥덇린??(TypeScript + Tailwind + ESLint)
+- [x] Prisma + SQLite ?ㅽ궎留?諛?Prisma ?깃???(lib/db.ts) ??postgresql?뭩qlite ?꾪솚 ?꾨즺
+- [x] DATABASE_URL ?ㅼ젙 (file:./dev.db), NOTION_API_KEY/DB_ID ?ㅼ젙 ?꾨즺
+- [x] prisma db push ??dev.db ?앹꽦 ?꾨즺
+- [x] npx prisma generate ???대씪?댁뼵???ъ깮???꾨즺
+- [x] Playwright ?ㅼ튂 諛?釉뚮씪?곗? 諛붿씠?덈━ ?ㅼ튂 ??chromium 1223 ?뺤씤 ?꾨즺
+- [x] Ollama ?곕룞 ?뚯뒪??(llama3.2:3b) ??summarizeRepoWithOllama 援ы쁽 ?꾨즺
 
-### 보조 수집
-- [x] RSS 수집 구현 (lib/collector/rss.ts)
-- [x] GitHub Trending 수집 (lib/collector/github.ts) — 4개 AI 토픽
+### 蹂댁“ ?섏쭛
+- [x] RSS ?섏쭛 援ы쁽 (lib/collector/rss.ts)
+- [x] GitHub Trending ?섏쭛 (lib/collector/github.ts) ??4媛?AI ?좏뵿
 
-### 메인 수집 — X/스레드 ⭐
-- [x] X 세션 저장 스크립트 (scripts/save-x-session.ts) — 수동 실행 필요
-- [x] 스레드 세션 저장 스크립트 (scripts/save-threads-session.ts) — 수동 실행 필요
-- [x] X 피드 수집 구현 (lib/collector/x.ts) — Playwright 세션 기반
-- [x] 스레드 피드 수집 구현 (lib/collector/threads.ts) — Playwright 세션 기반
-- [x] 세션 만료 감지 + 중단 조건 연동 (STATE.md 블로킹 질문 자동 기록)
-- [x] 중복 dedup 로직 (URL 해시 기준)
+### 硫붿씤 ?섏쭛 ??X/?ㅻ젅??狩?
+- [x] X ?몄뀡 ????ㅽ겕由쏀듃 (scripts/save-x-session.ts) ???섎룞 ?ㅽ뻾 ?꾩슂
+- [x] ?ㅻ젅???몄뀡 ????ㅽ겕由쏀듃 (scripts/save-threads-session.ts) ???섎룞 ?ㅽ뻾 ?꾩슂
+- [x] X ?쇰뱶 ?섏쭛 援ы쁽 (lib/collector/x.ts) ??Playwright ?몄뀡 湲곕컲
+- [x] ?ㅻ젅???쇰뱶 ?섏쭛 援ы쁽 (lib/collector/threads.ts) ??Playwright ?몄뀡 湲곕컲
+- [x] ?몄뀡 留뚮즺 媛먯? + 以묐떒 議곌굔 ?곕룞 (STATE.md 釉붾줈??吏덈Ц ?먮룞 湲곕줉)
+- [x] 以묐났 dedup 濡쒖쭅 (URL ?댁떆 湲곗?)
 
-### 깃헙 레포 감지 + 노션 저장 ⭐
-- [x] 깃헙 URL 감지 (lib/parser/repo-detect.ts)
-- [x] GitHub API로 레포 정보 + README 수집
-- [x] Ollama로 레포 요약 생성 — repoSummary 필드 + summarizeRepoWithOllama 연동
-- [x] 노션 자동 저장 (lib/notion/sync.ts) — 구현 완료
-- [x] 저장 실패 시 로컬 큐잉 — flushNotionQueue + PATCH /api/notion
+### 源껎뿖 ?덊룷 媛먯? + ?몄뀡 ???狩?
+- [x] 源껎뿖 URL 媛먯? (lib/parser/repo-detect.ts)
+- [x] GitHub API濡??덊룷 ?뺣낫 + README ?섏쭛
+- [x] Ollama濡??덊룷 ?붿빟 ?앹꽦 ??repoSummary ?꾨뱶 + summarizeRepoWithOllama ?곕룞
+- [x] ?몄뀡 ?먮룞 ???(lib/notion/sync.ts) ??援ы쁽 ?꾨즺
+- [x] ????ㅽ뙣 ??濡쒖뺄 ?먯엵 ??flushNotionQueue + PATCH /api/notion
 
-### 피드 UI
-- [x] 메인 피드 페이지 (FeedList + FeedCard)
-- [x] 깃헙 레포 카드 (RepoCard)
-- [x] 무한 스크롤
+### ?쇰뱶 UI
+- [x] 硫붿씤 ?쇰뱶 ?섏씠吏 (FeedList + FeedCard)
+- [x] 源껎뿖 ?덊룷 移대뱶 (RepoCard)
+- [x] 臾댄븳 ?ㅽ겕濡?
 
 ### API
-- [x] 수집 API (app/api/collect/route.ts)
-- [x] 요약 API (app/api/summarize/route.ts)
-- [x] Notion 저장 API (app/api/notion/route.ts)
+- [x] ?섏쭛 API (app/api/collect/route.ts)
+- [x] ?붿빟 API (app/api/summarize/route.ts)
+- [x] Notion ???API (app/api/notion/route.ts)
 
-## P1 — High
+## P1 ??High
 
-### 콘텐츠 파이프라인 ⭐
-- [x] content/ 디렉토리 구조 확정 — articles/scripts/cards 3종
-- [x] Article 템플릿 실제 생성 후 품질 확인 — 2026-06-22 Fable5 주제로 검증
-- [x] 유튜브 대본 템플릿 검증 — 15분 분량 대본 생성 완료
-- [x] 카드뉴스 JSON 스키마 검증 — 7장 cards 배열 스키마 확정
-- [x] 생성 콘텐츠 조회 API (app/api/content/route.ts)
-- [x] 생성 콘텐츠 웹 미리보기 UI
+### 肄섑뀗痢??뚯씠?꾨씪??狩?
+- [x] content/ ?붾젆?좊━ 援ъ“ ?뺤젙 ??articles/scripts/cards 3醫?
+- [x] Article ?쒗뵆由??ㅼ젣 ?앹꽦 ???덉쭏 ?뺤씤 ??2026-06-22 Fable5 二쇱젣濡?寃利?
+- [x] ?좏뒠釉??蹂??쒗뵆由?寃利???15遺?遺꾨웾 ?蹂??앹꽦 ?꾨즺
+- [x] 移대뱶?댁뒪 JSON ?ㅽ궎留?寃利???7??cards 諛곗뿴 ?ㅽ궎留??뺤젙
+- [x] ?앹꽦 肄섑뀗痢?議고쉶 API (app/api/content/route.ts)
+- [x] ?앹꽦 肄섑뀗痢???誘몃━蹂닿린 UI
 
-### 수집 고도화
-- [x] 소스별 수집 주기 설정 — intervalMinutes per RSS + githubIntervalMinutes, isWithinInterval 체크
-- [x] 수집 실패 알림 — collect-state.json per-source 에러 추적 + /settings 실패 배너
-- [x] 소스 추가/제거 UI — /settings 페이지, /api/sources CRUD, config/sources.json 동적 로딩
+### ?섏쭛 怨좊룄??
+- [x] ?뚯뒪蹂??섏쭛 二쇨린 ?ㅼ젙 ??intervalMinutes per RSS + githubIntervalMinutes, isWithinInterval 泥댄겕
+- [x] ?섏쭛 ?ㅽ뙣 ?뚮┝ ??collect-state.json per-source ?먮윭 異붿쟻 + /settings ?ㅽ뙣 諛곕꼫
+- [x] ?뚯뒪 異붽?/?쒓굅 UI ??/settings ?섏씠吏, /api/sources CRUD, config/sources.json ?숈쟻 濡쒕뵫
 
-### UI 개선
-- [x] 소스 필터
-- [x] 읽음/안읽음
-- [x] 북마크
-- [x] 검색
+### UI 媛쒖꽑
+- [x] ?뚯뒪 ?꾪꽣
+- [x] ?쎌쓬/?덉씫??
+- [x] 遺곷쭏??
+- [x] 寃??
 
-## P2 — Medium
+## P2 ??Medium
 
-### 콘텐츠 고도화
-- [x] 관련 유튜브 영상 소스 자동 탐색
-- [ ] 카드뉴스 이미지 자동 생성
-- [x] 주간 아카이브 페이지
-- [x] 콘텐츠 품질 셀프 평가
+### 肄섑뀗痢?怨좊룄??
+- [x] 愿???좏뒠釉??곸긽 ?뚯뒪 ?먮룞 ?먯깋
+- [ ] 移대뱶?댁뒪 ?대?吏 ?먮룞 ?앹꽦
+- [x] 二쇨컙 ?꾩뭅?대툕 ?섏씠吏
+- [x] 肄섑뀗痢??덉쭏 ????됯?
 
-### 수집 확장
-- [ ] X/스레드 셀렉터 자동 감지
-- [x] 키워드 필터
+### ?섏쭛 ?뺤옣
+- [ ] X/?ㅻ젅????됲꽣 ?먮룞 媛먯?
+- [x] ?ㅼ썙???꾪꽣
 
-## P3 — Low
-- [ ] 다크모드 / PWA
-- [ ] Vercel Cron 자동화
+## P3 ??Low
+- [ ] ?ㅽ겕紐⑤뱶 / PWA
+- [ ] Vercel Cron ?먮룞??
 - [ ] GitHub Actions CI/CD
-- [ ] 다중 유저 지원 (수익화 기반)
+- [ ] ?ㅼ쨷 ?좎? 吏??(?섏씡??湲곕컲)
+
