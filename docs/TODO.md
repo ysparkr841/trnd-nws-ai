@@ -51,8 +51,8 @@
 - [x] 생성 콘텐츠 웹 미리보기 UI
 
 ### 수집 고도화
-- [ ] 소스별 수집 주기 설정
-- [ ] 수집 실패 알림
+- [x] 소스별 수집 주기 설정 — intervalMinutes per RSS + githubIntervalMinutes, isWithinInterval 체크
+- [x] 수집 실패 알림 — collect-state.json per-source 에러 추적 + /settings 실패 배너
 - [x] 소스 추가/제거 UI — /settings 페이지, /api/sources CRUD, config/sources.json 동적 로딩
 
 ### UI 개선
