@@ -60,6 +60,65 @@ describe('GET /api/feeds', () => {
       expect.objectContaining({ where: { source: 'github' } })
     )
   })
+
+  it('search 파라미터로 content/repoName 검색', async () => {
+    mockFindMany.mockResolvedValue([{ id: 'd' }] as never)
+    const res = await GET(makeGetRequest('http://localhost/api/feeds?search=claude'))
+    const data = await res.json()
+    expect(data.items).toHaveLength(1)
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          OR: [
+            { content: { contains: 'claude' } },
+            { repoName: { contains: 'claude' } },
+          ],
+        },
+      })
+    )
+  })
+
+  it('source + search 동시 필터링', async () => {
+    mockFindMany.mockResolvedValue([] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?source=github&search=llm'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          source: 'github',
+          OR: [
+            { content: { contains: 'llm' } },
+            { repoName: { contains: 'llm' } },
+          ],
+        },
+      })
+    )
+  })
+
+  it('bookmarked=true 필터링', async () => {
+    mockFindMany.mockResolvedValue([{ id: 'e', isBookmarked: true }] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?bookmarked=true'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { isBookmarked: true } })
+    )
+  })
+
+  it('bookmarked + source 동시 필터링', async () => {
+    mockFindMany.mockResolvedValue([] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?bookmarked=true&source=rss'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { source: 'rss', isBookmarked: true },
+      })
+    )
+  })
+
+  it('bookmarked=false 는 필터 미적용', async () => {
+    mockFindMany.mockResolvedValue([] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?bookmarked=false'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: undefined })
+    )
+  })
 })
 
 describe('PATCH /api/feeds', () => {

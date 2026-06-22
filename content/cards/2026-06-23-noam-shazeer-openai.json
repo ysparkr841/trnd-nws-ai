@@ -1,0 +1,55 @@
+{
+  "topic": "Noam Shazeer OpenAI 합류 — 트랜스포머 공동 저자의 이탈, AI 인재 전쟁 새 국면",
+  "date": "2026-06-23",
+  "cards": [
+    {
+      "index": 1,
+      "title": "트랜스포머를 만든 사람이 OpenAI로 갔다",
+      "body": "2026년 6월 18일, Noam Shazeer가 Google을 떠나 OpenAI에 합류한다고 발표했습니다. 그는 ChatGPT·Claude·Gemini 모든 AI의 뼈대가 된 '트랜스포머' 아키텍처를 2017년 공동 발명한 인물입니다.",
+      "highlight": "AI 역사상 가장 중요한 인물 중 하나가 OpenAI를 선택했습니다.",
+      "visual_suggestion": "트랜스포머 아키텍처 다이어그램 → OpenAI 로고 화살표"
+    },
+    {
+      "index": 2,
+      "title": "Attention Is All You Need — 세상을 바꾼 논문",
+      "body": "2017년 Google 연구팀 8명이 발표한 이 논문은 트랜스포머 아키텍처를 세상에 소개했습니다. GPT, Claude, Gemini, LLaMA 등 오늘날 모든 대형 AI 언어 모델이 이 논문 위에 서 있습니다. Noam Shazeer는 그 8인 중 한 명입니다.",
+      "highlight": "세상 모든 AI의 설계도를 만든 사람.",
+      "visual_suggestion": "논문 표지 이미지 + 8인 저자 명단"
+    },
+    {
+      "index": 3,
+      "title": "첫 번째 이탈: 2021년 Character.AI 창업",
+      "body": "Shazeer는 2021년 Google을 떠나 Character.AI를 창업했습니다. '소비자가 원하는 AI 제품을 구글에서는 빠르게 만들 수 없다'는 게 이유였습니다. Character.AI는 감성 AI 대화 플랫폼으로 수억 명의 사용자를 모으며 급성장했습니다.",
+      "highlight": "돈이 아니라 '제품을 만드는 속도'가 문제였습니다.",
+      "visual_suggestion": "Character.AI 인터페이스 스크린샷"
+    },
+    {
+      "index": 4,
+      "title": "27억 달러 귀환 — Google의 반격 (2024년 9월)",
+      "body": "Google은 2024년 9월 Character.AI 기술 라이선스에 27억 달러를 투자하며 Shazeer를 Gemini 공동 리더로 복귀시켰습니다. Shazeer가 개인적으로 받은 금액은 최소 7,500억 원으로 추산됩니다. 업계는 '드디어 Google이 인재를 잡았다'고 평가했습니다.",
+      "highlight": "27억 달러. 하지만 2년도 못 갔습니다.",
+      "visual_suggestion": "달러 사인 + Google 로고 + 타임라인"
+    },
+    {
+      "index": 5,
+      "title": "두 번째 이탈: 2년 만에 OpenAI로 (2026년 6월)",
+      "body": "2026년 6월 18일, Shazeer는 다시 Google을 떠났습니다. 이번 목적지는 OpenAI. 아키텍처 연구 리더로서 트랜스포머 이후 다음 세대 AI 모델을 설계하는 역할을 맡습니다. Sam Altman은 '10년 전부터 함께하고 싶었던 파트너십'이라며 환영했습니다.",
+      "highlight": "1조 원을 줘도 문화가 맞지 않으면 떠납니다.",
+      "visual_suggestion": "구글→OpenAI 이동 화살표, 2년 타임라인"
+    },
+    {
+      "index": 6,
+      "title": "48시간 안에 — 노벨상 수상자도 DeepMind 떠나다",
+      "body": "Shazeer 발표 며칠 후, AlphaFold를 만들어 2024년 노벨 화학상을 받은 John Jumper가 9년간의 DeepMind를 떠나 Anthropic으로 이직했습니다. 이틀 사이에 Google/DeepMind는 트랜스포머 공동 저자와 노벨상 수상자를 동시에 잃었습니다.",
+      "highlight": "이건 개인의 선택이 아니라 조직의 문제입니다.",
+      "visual_suggestion": "노벨상 메달 + DeepMind→Anthropic 화살표"
+    },
+    {
+      "index": 7,
+      "title": "트랜스포머 8인 저자 — 현재 위치",
+      "body": "2017년 논문의 8명 공동 저자들은 지금 Cohere, Sakana AI, Inceptive, Essential AI, NEAR Protocol, OpenAI 등에 흩어져 있습니다. Google에 남은 저자는 0명. AI를 발명한 회사가 AI 인재를 모두 경쟁사에 넘겨주고 있습니다. AI 인재 전쟁의 진짜 전선은 연봉이 아니라 제품 문화입니다.",
+      "highlight": "Google에서 탄생한 기술, Google 밖에서 꽃피우다.",
+      "visual_suggestion": "8인 저자 현재 소속 인포그래픽"
+    }
+  ]
+}
