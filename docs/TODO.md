@@ -76,6 +76,7 @@
 ## P3 ??Low
 - [ ] ?ㅽ겕紐⑤뱶 / PWA
 - [ ] Vercel Cron ?먮룞??
-- [ ] GitHub Actions CI/CD
+- [x] GitHub Actions CI/CD
 - [ ] ?ㅼ쨷 ?좎? 吏??(?섏씡??湲곕컲)
+
 
