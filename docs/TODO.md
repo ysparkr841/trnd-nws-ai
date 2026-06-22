@@ -8,7 +8,7 @@
 - [x] DATABASE_URL 설정 (file:./dev.db), NOTION_API_KEY/DB_ID 설정 완료
 - [x] prisma db push — dev.db 생성 완료
 - [x] npx prisma generate — 클라이언트 재생성 완료
-- [ ] Playwright 설치 및 브라우저 바이너리 설치
+- [x] Playwright 설치 및 브라우저 바이너리 설치 — chromium 1223 확인 완료
 - [x] Ollama 연동 테스트 (llama3.2:3b) — summarizeRepoWithOllama 구현 완료
 
 ### 보조 수집
@@ -43,10 +43,10 @@
 ## P1 — High
 
 ### 콘텐츠 파이프라인 ⭐
-- [ ] content/ 디렉토리 구조 확정
-- [ ] Article 템플릿 실제 생성 후 품질 확인
-- [ ] 유튜브 대본 템플릿 검증
-- [ ] 카드뉴스 JSON 스키마 검증
+- [x] content/ 디렉토리 구조 확정 — articles/scripts/cards 3종
+- [x] Article 템플릿 실제 생성 후 품질 확인 — 2026-06-22 Fable5 주제로 검증
+- [x] 유튜브 대본 템플릿 검증 — 15분 분량 대본 생성 완료
+- [x] 카드뉴스 JSON 스키마 검증 — 7장 cards 배열 스키마 확정
 - [x] 생성 콘텐츠 조회 API (app/api/content/route.ts)
 - [x] 생성 콘텐츠 웹 미리보기 UI
 
@@ -56,9 +56,9 @@
 - [ ] 소스 추가/제거 UI
 
 ### UI 개선
-- [ ] 소스 필터
-- [ ] 읽음/안읽음
-- [ ] 북마크
+- [x] 소스 필터
+- [x] 읽음/안읽음
+- [x] 북마크
 - [ ] 검색
 
 ## P2 — Medium

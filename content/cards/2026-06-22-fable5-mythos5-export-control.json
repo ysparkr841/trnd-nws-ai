@@ -1,0 +1,85 @@
+{
+  "topic": "Anthropic Fable 5·Mythos 5 수출 통제",
+  "date": "2026-06-22",
+  "subtitle": "세계 최강 AI 모델의 72시간 사망 사건",
+  "cards": [
+    {
+      "card_number": 1,
+      "type": "title",
+      "title": "세계 최강 AI가 72시간 만에 사라졌다",
+      "subtitle": "Anthropic Fable 5 & Mythos 5 수출 통제 사건",
+      "body": "2026년 6월 9일 출시 → 6월 12일 미국 정부 명령 → 전 세계 접근 차단\n역사상 최초 AI 모델 수출 통제",
+      "visual_hint": "카운트다운 72시간 타이머, 붉은 배경"
+    },
+    {
+      "card_number": 2,
+      "type": "fact",
+      "title": "Mythos 5가 가진 능력",
+      "subtitle": "왜 세계가 두려워했나",
+      "body": "🔴 17년 된 FreeBSD RCE 취약점을 자율적으로 발견·익스플로잇\n🔴 Windows 커널 취약점 익스플로잇을 단 31분 만에 완성\n🔴 기존 수 주 걸리던 작업을 수 분으로 단축\n\n「세계에서 가장 강력한 사이버보안 AI」— Anthropic",
+      "visual_hint": "어두운 배경, 코드 스크롤, 타이머 이미지"
+    },
+    {
+      "card_number": 3,
+      "type": "timeline",
+      "title": "운명의 72시간",
+      "subtitle": "런칭부터 글로벌 셧다운까지",
+      "body": "📅 6월 9일\nFable 5 & Mythos 5 공식 출시\n\n⚡ 6월 12일\n미국 BIS, 외국 국적자 접근 차단 명령\n\n🔒 6월 12일 저녁\n전 세계 모든 사용자 접근 차단\n\n📢 6월 13일\nAnthropic 공식 성명: \"동의하지 않지만 어쩔 수 없었다\"",
+      "visual_hint": "수직 타임라인, 각 단계 다른 색상"
+    },
+    {
+      "card_number": 4,
+      "type": "explainer",
+      "title": "젤브레이크? 진짜 이유는",
+      "subtitle": "공식 이유 vs 실제 배경",
+      "body": "공식 이유:\n「Fable 5 안전장치 우회 기법 발견」\n(멀티에이전트 분해 + 유니코드 트릭)\n\n실제 배경 (보도):\n• Amazon이 내부 젤브레이크 발견·신고\n• SK Telecom의 Mythos 5 접근에 중국 연계 우려\n\nAnthropic 반박:\n「유해한 결과 없음. 이 기준이면 모든 모델 배포 불가」",
+      "visual_hint": "두 컬럼 대조, 물음표 아이콘"
+    },
+    {
+      "card_number": 5,
+      "type": "irony",
+      "title": "통제의 역설",
+      "subtitle": "미국이 중국 AI를 키웠다",
+      "body": "Fable 5 금지 이후 1주일 만에\n기업들이 선택한 대안:\n\n→ Cohere 오픈 웨이트 모델\n→ Moonshot (중국계)\n→ Zhipu (중국계)\n\n폐쇄형 모델 통제가\n오픈 웨이트 생태계를 가속화\n\n약 100명의 사이버보안 전문가\n「명백한 과잉 대응」",
+      "visual_hint": "아이러니 표현, 방패가 오히려 구멍을 만드는 이미지"
+    },
+    {
+      "card_number": 6,
+      "type": "impact",
+      "title": "AI 킬 스위치의 등장",
+      "subtitle": "새로운 AI 거버넌스 시대",
+      "body": "이번 사건이 증명한 것:\n\n✅ AI 모델도 수출 통제 대상이 됨\n✅ 미국은 글로벌 AI 접근을 하룻밤에 차단 가능\n✅ AI가 외교·안보 자산이 됐음\n\n각국의 반응:\n🇪🇺 EU → CADA (AI 주권법) 가속화\n🇰🇷 한국 → AI 기본법 논의 급물살\n🇨🇳 중국 → 자국 생태계 구축 정당성 확인",
+      "visual_hint": "세계 지도, 각국 반응 표시"
+    },
+    {
+      "card_number": 7,
+      "type": "conclusion",
+      "title": "핵심 교훈",
+      "subtitle": "AI 시대의 생존 전략",
+      "body": "1️⃣ 단일 AI 공급자 의존 = 국가 안보 리스크\n→ 멀티 프로바이더 전략 필수\n\n2️⃣ 폐쇄형 통제 ≠ 안전\n→ 오픈소스 생태계가 더 빠르게 성장\n\n3️⃣ AI 능력의 임계점\n→ 익스플로잇 자동 생성 AI는 사이버 패러다임 변화\n\n「AI 킬 스위치의 시대가 열렸다」",
+      "visual_hint": "깔끔한 리스트, 강렬한 마지막 인용구"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Anthropic 공식 성명",
+      "url": "https://www.anthropic.com/news/fable-mythos-access"
+    },
+    {
+      "title": "Fortune — Anthropic 모델 비활성화 보도",
+      "url": "https://fortune.com/2026/06/13/anthropic-disables-fable-mythos-export-controls-national-security-threat/"
+    },
+    {
+      "title": "Anthropic Mythos 사이버보안 평가",
+      "url": "https://red.anthropic.com/2026/mythos-preview/"
+    },
+    {
+      "title": "CEP — 지정학적 신호 분석",
+      "url": "https://www.cep.eu/eu-topics/details/us-access-ban-on-anthropics-fablemythos-5-more-of-a-geopolitical-signal-than-a-necessary-security-measure.html"
+    },
+    {
+      "title": "The New Stack — 오픈 웨이트 대체 현상",
+      "url": "https://thenewstack.io/fable-ban-open-weights/"
+    }
+  ]
+}
