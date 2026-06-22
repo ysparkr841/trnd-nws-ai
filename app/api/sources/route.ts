@@ -33,6 +33,25 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(config)
 }
 
+export async function PATCH(req: NextRequest) {
+  const body: { type: 'rss' | 'github'; url?: string; intervalMinutes: number } = await req.json()
+  const config = readSourcesConfig()
+
+  if (body.type === 'rss') {
+    if (!body.url) return NextResponse.json({ error: 'url 필수' }, { status: 400 })
+    const source = config.rss.find((s) => s.url === body.url)
+    if (!source) return NextResponse.json({ error: '소스 없음' }, { status: 404 })
+    source.intervalMinutes = body.intervalMinutes
+  } else if (body.type === 'github') {
+    config.githubIntervalMinutes = body.intervalMinutes
+  } else {
+    return NextResponse.json({ error: 'type은 rss 또는 github' }, { status: 400 })
+  }
+
+  writeSourcesConfig(config)
+  return NextResponse.json(config)
+}
+
 export async function DELETE(req: NextRequest) {
   const body: { type: string; url?: string; topic?: string } = await req.json()
   const config = readSourcesConfig()

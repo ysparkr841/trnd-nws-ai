@@ -4,11 +4,13 @@ import path from 'path'
 export interface RssSource {
   name: string
   url: string
+  intervalMinutes?: number
 }
 
 export interface SourcesConfig {
   rss: RssSource[]
   githubTopics: string[]
+  githubIntervalMinutes?: number
 }
 
 const CONFIG_PATH = path.join(process.cwd(), 'config', 'sources.json')

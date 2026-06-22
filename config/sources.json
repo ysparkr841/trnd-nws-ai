@@ -1,10 +1,11 @@
 {
   "rss": [
-    { "name": "arXiv AI", "url": "https://rss.arxiv.org/rss/cs.AI" },
-    { "name": "arXiv ML", "url": "https://rss.arxiv.org/rss/cs.LG" },
-    { "name": "HuggingFace Blog", "url": "https://huggingface.co/blog/feed.xml" },
-    { "name": "Anthropic News", "url": "https://www.anthropic.com/news.rss" },
-    { "name": "OpenAI Blog", "url": "https://openai.com/blog/rss.xml" }
+    { "name": "arXiv AI", "url": "https://rss.arxiv.org/rss/cs.AI", "intervalMinutes": 60 },
+    { "name": "arXiv ML", "url": "https://rss.arxiv.org/rss/cs.LG", "intervalMinutes": 60 },
+    { "name": "HuggingFace Blog", "url": "https://huggingface.co/blog/feed.xml", "intervalMinutes": 60 },
+    { "name": "Anthropic News", "url": "https://www.anthropic.com/news.rss", "intervalMinutes": 60 },
+    { "name": "OpenAI Blog", "url": "https://openai.com/blog/rss.xml", "intervalMinutes": 60 }
   ],
-  "githubTopics": ["machine-learning", "llm", "ai", "deep-learning"]
+  "githubTopics": ["machine-learning", "llm", "ai", "deep-learning"],
+  "githubIntervalMinutes": 60
 }
