@@ -134,14 +134,24 @@ function ContentSection({
                 </div>
                 <p className="text-xs text-gray-400 mt-0.5">{item.date}</p>
               </div>
-              <a
-                href={`/api/content/${type}/${item.filename}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 hover:underline shrink-0"
-              >
-                보기 →
-              </a>
+              <div className="flex items-center gap-3 shrink-0">
+                {type === 'cards' && (
+                  <Link
+                    href={`/content/cards/${item.filename}`}
+                    className="text-xs text-purple-600 hover:underline"
+                  >
+                    이미지 갤러리 →
+                  </Link>
+                )}
+                <a
+                  href={`/api/content/${type}/${item.filename}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:underline"
+                >
+                  보기 →
+                </a>
+              </div>
             </div>
           ))}
         </div>
