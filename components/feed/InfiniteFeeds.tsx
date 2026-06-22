@@ -13,6 +13,8 @@ const SOURCES = [
   { key: 'github', label: 'GitHub' },
 ]
 
+const AI_KEYWORDS = ['LLM', 'GPT', 'Claude', 'Gemini', 'RAG', 'AGI', 'Transformer', '파인튜닝']
+
 interface Props {
   initialFeeds: FeedItem[]
   initialCursor: string | null
@@ -24,10 +26,12 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
   const [done, setDone] = useState(!initialCursor)
   const [source, setSource] = useState('')
   const [search, setSearch] = useState('')
+  const [bookmarked, setBookmarked] = useState(false)
 
   const cursorRef = useRef<string | null>(initialCursor)
   const sourceRef = useRef('')
   const searchRef = useRef('')
+  const bookmarkedRef = useRef(false)
   const loadingRef = useRef(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -41,6 +45,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
       if (cursor) params.set('cursor', cursor)
       if (src) params.set('source', src)
       if (searchRef.current) params.set('search', searchRef.current)
+      if (bookmarkedRef.current) params.set('bookmarked', 'true')
       const res = await fetch(`/api/feeds?${params}`)
       const data: { items: FeedItem[]; nextCursor: string | null } = await res.json()
       setFeeds((prev) => reset ? data.items : [...prev, ...data.items])
@@ -72,6 +77,22 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
       cursorRef.current = null
       fetchPage(null, sourceRef.current, true)
     }, 300)
+  }, [fetchPage])
+
+  const handleKeywordClick = useCallback((kw: string) => {
+    const next = searchRef.current === kw ? '' : kw
+    setSearch(next)
+    searchRef.current = next
+    cursorRef.current = null
+    fetchPage(null, sourceRef.current, true)
+  }, [fetchPage])
+
+  const handleBookmarkedToggle = useCallback(() => {
+    const next = !bookmarkedRef.current
+    bookmarkedRef.current = next
+    setBookmarked(next)
+    cursorRef.current = null
+    fetchPage(null, sourceRef.current, true)
   }, [fetchPage])
 
   useEffect(() => {
@@ -109,7 +130,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
           className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <div className="flex gap-1 mb-4 flex-wrap">
+      <div className="flex gap-1 mb-2 flex-wrap">
         {SOURCES.map(({ key, label }) => (
           <button
             key={key}
@@ -121,6 +142,31 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
             }`}
           >
             {label}
+          </button>
+        ))}
+        <button
+          onClick={handleBookmarkedToggle}
+          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ml-auto ${
+            bookmarked
+              ? 'bg-yellow-400 text-white'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          ★ 북마크
+        </button>
+      </div>
+      <div className="flex gap-1 mb-4 flex-wrap">
+        {AI_KEYWORDS.map((kw) => (
+          <button
+            key={kw}
+            onClick={() => handleKeywordClick(kw)}
+            className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+              search === kw
+                ? 'bg-indigo-600 text-white'
+                : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+            }`}
+          >
+            {kw}
           </button>
         ))}
       </div>

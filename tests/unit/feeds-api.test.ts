@@ -93,6 +93,32 @@ describe('GET /api/feeds', () => {
       })
     )
   })
+
+  it('bookmarked=true 필터링', async () => {
+    mockFindMany.mockResolvedValue([{ id: 'e', isBookmarked: true }] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?bookmarked=true'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { isBookmarked: true } })
+    )
+  })
+
+  it('bookmarked + source 동시 필터링', async () => {
+    mockFindMany.mockResolvedValue([] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?bookmarked=true&source=rss'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { source: 'rss', isBookmarked: true },
+      })
+    )
+  })
+
+  it('bookmarked=false 는 필터 미적용', async () => {
+    mockFindMany.mockResolvedValue([] as never)
+    await GET(makeGetRequest('http://localhost/api/feeds?bookmarked=false'))
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: undefined })
+    )
+  })
 })
 
 describe('PATCH /api/feeds', () => {

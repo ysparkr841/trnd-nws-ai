@@ -10,14 +10,16 @@ export async function GET(req: NextRequest) {
   const cursor = req.nextUrl.searchParams.get('cursor')
   const source = req.nextUrl.searchParams.get('source')
   const search = req.nextUrl.searchParams.get('search')
+  const bookmarked = req.nextUrl.searchParams.get('bookmarked')
 
   const where: Prisma.FeedWhereInput = {}
   if (source) where.source = source
+  if (bookmarked === 'true') where.isBookmarked = true
   if (search) where.OR = [
     { content: { contains: search } },
     { repoName: { contains: search } },
   ]
-  const hasWhere = !!(source || search)
+  const hasWhere = !!(source || search || bookmarked === 'true')
 
   try {
     const rows = await db.feed.findMany({
