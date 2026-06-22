@@ -53,13 +53,13 @@
 ### 수집 고도화
 - [ ] 소스별 수집 주기 설정
 - [ ] 수집 실패 알림
-- [ ] 소스 추가/제거 UI
+- [x] 소스 추가/제거 UI — /settings 페이지, /api/sources CRUD, config/sources.json 동적 로딩
 
 ### UI 개선
 - [x] 소스 필터
 - [x] 읽음/안읽음
 - [x] 북마크
-- [ ] 검색
+- [x] 검색
 
 ## P2 — Medium
 
