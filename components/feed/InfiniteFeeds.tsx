@@ -23,10 +23,13 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(!initialCursor)
   const [source, setSource] = useState('')
+  const [search, setSearch] = useState('')
 
   const cursorRef = useRef<string | null>(initialCursor)
   const sourceRef = useRef('')
+  const searchRef = useRef('')
   const loadingRef = useRef(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   const fetchPage = useCallback(async (cursor: string | null, src: string, reset: boolean) => {
@@ -37,6 +40,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
       const params = new URLSearchParams()
       if (cursor) params.set('cursor', cursor)
       if (src) params.set('source', src)
+      if (searchRef.current) params.set('search', searchRef.current)
       const res = await fetch(`/api/feeds?${params}`)
       const data: { items: FeedItem[]; nextCursor: string | null } = await res.json()
       setFeeds((prev) => reset ? data.items : [...prev, ...data.items])
@@ -58,6 +62,16 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
     setSource(src)
     cursorRef.current = null
     fetchPage(null, src, true)
+  }, [fetchPage])
+
+  const handleSearchChange = useCallback((q: string) => {
+    setSearch(q)
+    searchRef.current = q
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      cursorRef.current = null
+      fetchPage(null, sourceRef.current, true)
+    }, 300)
   }, [fetchPage])
 
   useEffect(() => {
@@ -86,6 +100,15 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
 
   return (
     <div>
+      <div className="mb-3">
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          placeholder="피드 검색..."
+          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
       <div className="flex gap-1 mb-4 flex-wrap">
         {SOURCES.map(({ key, label }) => (
           <button

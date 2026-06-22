@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import type { Prisma } from '@prisma/client'
 import { db } from '@/lib/db'
 
 const LIMIT = 20
@@ -8,12 +9,21 @@ type ToggleField = (typeof ALLOWED_FIELDS)[number]
 export async function GET(req: NextRequest) {
   const cursor = req.nextUrl.searchParams.get('cursor')
   const source = req.nextUrl.searchParams.get('source')
+  const search = req.nextUrl.searchParams.get('search')
+
+  const where: Prisma.FeedWhereInput = {}
+  if (source) where.source = source
+  if (search) where.OR = [
+    { content: { contains: search } },
+    { repoName: { contains: search } },
+  ]
+  const hasWhere = !!(source || search)
 
   try {
     const rows = await db.feed.findMany({
       orderBy: { collectedAt: 'desc' },
       take: LIMIT + 1,
-      where: source ? { source } : undefined,
+      where: hasWhere ? where : undefined,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     })
 
