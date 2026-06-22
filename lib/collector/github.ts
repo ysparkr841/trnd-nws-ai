@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest'
-import { GITHUB_TRENDING_TOPICS } from './sources'
+import { readSourcesConfig } from '@/lib/config/sources'
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN })
 
@@ -20,6 +20,7 @@ export async function collectGithubTrending(): Promise<GithubTrendingItem[]> {
   const results: GithubTrendingItem[] = []
   const seen = new Set<string>()
   const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const { githubTopics: GITHUB_TRENDING_TOPICS } = readSourcesConfig()
 
   for (const topic of GITHUB_TRENDING_TOPICS) {
     try {

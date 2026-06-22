@@ -1,5 +1,5 @@
 import Parser from 'rss-parser'
-import { RSS_SOURCES } from './sources'
+import { readSourcesConfig } from '@/lib/config/sources'
 
 const parser = new Parser()
 
@@ -13,6 +13,7 @@ export interface RssFeedItem {
 
 export async function collectRssFeeds(): Promise<RssFeedItem[]> {
   const results: RssFeedItem[] = []
+  const { rss: RSS_SOURCES } = readSourcesConfig()
 
   for (const source of RSS_SOURCES) {
     try {

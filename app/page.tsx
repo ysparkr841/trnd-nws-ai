@@ -41,6 +41,12 @@ export default async function Home() {
             >
               콘텐츠 보기
             </Link>
+            <Link
+              href="/settings"
+              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+            >
+              소스 설정
+            </Link>
             <CollectButton />
           </div>
         </div>
