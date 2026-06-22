@@ -43,6 +43,12 @@ export default async function Home() {
               콘텐츠 보기
             </Link>
             <Link
+              href="/dashboard"
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:underline"
+            >
+              대시보드
+            </Link>
+            <Link
               href="/settings"
               className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:underline"
             >
