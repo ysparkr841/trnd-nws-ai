@@ -105,15 +105,15 @@ export default function SettingsPage() {
   ] : []
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-800">← 피드로 돌아가기</Link>
+          <Link href="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">← 피드로 돌아가기</Link>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">소스 설정</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-6">소스 설정</h1>
 
         {loading ? (
-          <p className="text-gray-400">불러오는 중...</p>
+          <p className="text-gray-400 dark:text-gray-500">불러오는 중...</p>
         ) : config ? (
           <div className="space-y-6">
             {error && (
@@ -122,11 +122,11 @@ export default function SettingsPage() {
 
             {/* 수집 실패 알림 */}
             {failures.length > 0 && (
-              <section className="bg-red-50 border border-red-200 rounded-xl p-4">
-                <h2 className="font-semibold text-red-800 mb-2">수집 실패 알림</h2>
+              <section className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-xl p-4">
+                <h2 className="font-semibold text-red-800 dark:text-red-300 mb-2">수집 실패 알림</h2>
                 <ul className="space-y-1">
                   {failures.map((f, i) => (
-                    <li key={i} className="text-sm text-red-700">
+                    <li key={i} className="text-sm text-red-700 dark:text-red-400">
                       <span className="font-medium">{f.label}</span>: {f.error}
                     </li>
                   ))}
@@ -136,45 +136,45 @@ export default function SettingsPage() {
 
             {/* 수집 상태 요약 */}
             {status && (
-              <section className="bg-white rounded-xl border border-gray-200 p-5">
-                <h2 className="font-semibold text-gray-800 mb-3">수집 상태</h2>
+              <section className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">수집 상태</h2>
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="text-gray-500">GitHub Trending</div>
-                  <div className="text-gray-700">{relativeTime(status.github.lastCollectedAt)}</div>
-                  <div className="text-gray-500">X (Twitter)</div>
-                  <div className="text-gray-700">{relativeTime(status.x.lastCollectedAt)}</div>
-                  <div className="text-gray-500">Threads</div>
-                  <div className="text-gray-700">{relativeTime(status.threads.lastCollectedAt)}</div>
+                  <div className="text-gray-500 dark:text-gray-400">GitHub Trending</div>
+                  <div className="text-gray-700 dark:text-gray-300">{relativeTime(status.github.lastCollectedAt)}</div>
+                  <div className="text-gray-500 dark:text-gray-400">X (Twitter)</div>
+                  <div className="text-gray-700 dark:text-gray-300">{relativeTime(status.x.lastCollectedAt)}</div>
+                  <div className="text-gray-500 dark:text-gray-400">Threads</div>
+                  <div className="text-gray-700 dark:text-gray-300">{relativeTime(status.threads.lastCollectedAt)}</div>
                 </div>
               </section>
             )}
 
             {/* RSS 소스 */}
-            <section className="bg-white rounded-xl border border-gray-200 p-5">
-              <h2 className="font-semibold text-gray-800 mb-4">RSS 소스</h2>
-              <ul className="divide-y divide-gray-100 mb-4">
+            <section className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+              <h2 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">RSS 소스</h2>
+              <ul className="divide-y divide-gray-100 dark:divide-gray-700 mb-4">
                 {config.rss.map((s) => {
                   const srcStatus = status?.rss[s.url]
                   return (
                     <li key={s.url} className="py-2">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <span className="text-sm font-medium text-gray-800">{s.name}</span>
+                          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{s.name}</span>
                           {srcStatus?.lastError && (
                             <span className="ml-2 text-xs text-red-500">오류</span>
                           )}
-                          <span className="text-xs text-gray-400 ml-2">{relativeTime(srcStatus?.lastCollectedAt ?? null)}</span>
-                          <span className="text-xs text-gray-400 block truncate">{s.url}</span>
+                          <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">{relativeTime(srcStatus?.lastCollectedAt ?? null)}</span>
+                          <span className="text-xs text-gray-400 dark:text-gray-500 block truncate">{s.url}</span>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          <label className="flex items-center gap-1 text-xs text-gray-500">
+                          <label className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                             <input
                               type="number"
                               min={5}
                               max={1440}
                               defaultValue={s.intervalMinutes ?? 60}
                               onBlur={(e) => updateRssInterval(s.url, Number(e.target.value))}
-                              className="w-14 px-1.5 py-0.5 border border-gray-200 rounded text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
+                              className="w-14 px-1.5 py-0.5 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
                             />
                             분
                           </label>
@@ -191,24 +191,24 @@ export default function SettingsPage() {
                   value={rssName}
                   onChange={(e) => setRssName(e.target.value)}
                   placeholder="이름 (예: arXiv AI)"
-                  className="flex-1 min-w-0 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 min-w-0 px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="url"
                   value={rssUrl}
                   onChange={(e) => setRssUrl(e.target.value)}
                   placeholder="RSS URL"
-                  className="flex-[2] min-w-0 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-[2] min-w-0 px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button onClick={addRss} className="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">추가</button>
               </div>
             </section>
 
             {/* GitHub 토픽 */}
-            <section className="bg-white rounded-xl border border-gray-200 p-5">
+            <section className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-800">GitHub 트렌딩 토픽</h2>
-                <label className="flex items-center gap-1 text-xs text-gray-500">
+                <h2 className="font-semibold text-gray-800 dark:text-gray-200">GitHub 트렌딩 토픽</h2>
+                <label className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                   수집 주기
                   <input
                     type="number"
@@ -216,16 +216,16 @@ export default function SettingsPage() {
                     max={1440}
                     defaultValue={config.githubIntervalMinutes ?? 60}
                     onBlur={(e) => updateGithubInterval(Number(e.target.value))}
-                    className="w-14 px-1.5 py-0.5 border border-gray-200 rounded text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
+                    className="w-14 px-1.5 py-0.5 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
                   />
                   분
                 </label>
               </div>
               <div className="flex flex-wrap gap-2 mb-4">
                 {config.githubTopics.map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full">
+                  <span key={t} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 rounded-full">
                     {t}
-                    <button onClick={() => removeGithub(t)} className="text-gray-400 hover:text-red-500 ml-0.5" aria-label={`${t} 삭제`}>×</button>
+                    <button onClick={() => removeGithub(t)} className="text-gray-400 dark:text-gray-500 hover:text-red-500 ml-0.5" aria-label={`${t} 삭제`}>×</button>
                   </span>
                 ))}
               </div>
@@ -236,14 +236,14 @@ export default function SettingsPage() {
                   onChange={(e) => setGhTopic(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && addGithub()}
                   placeholder="토픽 추가 (예: transformer)"
-                  className="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button onClick={addGithub} className="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">추가</button>
               </div>
             </section>
           </div>
         ) : (
-          <p className="text-gray-400">소스 설정을 불러오지 못했습니다.</p>
+          <p className="text-gray-400 dark:text-gray-500">소스 설정을 불러오지 못했습니다.</p>
         )}
       </div>
     </main>

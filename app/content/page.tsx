@@ -85,10 +85,10 @@ async function listVideos(): Promise<VideoItem[]> {
 }
 
 const GRADE_STYLE: Record<string, string> = {
-  A: 'bg-green-100 text-green-700',
-  B: 'bg-blue-100 text-blue-700',
-  C: 'bg-amber-100 text-amber-700',
-  D: 'bg-red-100 text-red-700',
+  A: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
+  B: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
+  C: 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300',
+  D: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
 }
 
 function GradeBadge({ quality }: { quality: QualityResult | null }) {
@@ -115,30 +115,30 @@ function ContentSection({
 }) {
   return (
     <section className="mb-8">
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">
-        {title} <span className="text-sm font-normal text-gray-400">({items.length})</span>
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+        {title} <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({items.length})</span>
       </h2>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-400">아직 생성된 콘텐츠가 없습니다.</p>
+        <p className="text-sm text-gray-400 dark:text-gray-500">아직 생성된 콘텐츠가 없습니다.</p>
       ) : (
         <div className="space-y-2">
           {items.map((item) => (
             <div
               key={item.filename}
-              className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between gap-3"
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between gap-3"
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-medium text-gray-900 capitalize">{item.topic}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-50 capitalize">{item.topic}</p>
                   <GradeBadge quality={item.quality} />
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5">{item.date}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{item.date}</p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 {type === 'cards' && (
                   <Link
                     href={`/content/cards/${item.filename}`}
-                    className="text-xs text-purple-600 hover:underline"
+                    className="text-xs text-purple-600 dark:text-purple-400 hover:underline"
                   >
                     이미지 갤러리 →
                   </Link>
@@ -147,7 +147,7 @@ function ContentSection({
                   href={`/api/content/${type}/${item.filename}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-blue-600 hover:underline"
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   보기 →
                 </a>
@@ -164,10 +164,10 @@ function VideoSection({ items }: { items: VideoItem[] }) {
   if (items.length === 0) {
     return (
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">
-          관련 YouTube 영상 <span className="text-sm font-normal text-gray-400">(0)</span>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+          관련 YouTube 영상 <span className="text-sm font-normal text-gray-400 dark:text-gray-500">(0)</span>
         </h2>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-gray-400 dark:text-gray-500">
           콘텐츠 파이프라인 실행 시 자동으로 관련 영상이 탐색됩니다.
         </p>
       </section>
@@ -175,15 +175,15 @@ function VideoSection({ items }: { items: VideoItem[] }) {
   }
   return (
     <section className="mb-8">
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
         관련 YouTube 영상{' '}
-        <span className="text-sm font-normal text-gray-400">({items.length}개 주제)</span>
+        <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({items.length}개 주제)</span>
       </h2>
       <div className="space-y-4">
         {items.map((item) => (
-          <div key={item.filename} className="bg-white rounded-lg border border-gray-200 p-4">
+          <div key={item.filename} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-gray-900 capitalize">{item.topic}</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-50 capitalize">{item.topic}</p>
               <a
                 href={item.searchUrl}
                 target="_blank"
@@ -194,7 +194,7 @@ function VideoSection({ items }: { items: VideoItem[] }) {
               </a>
             </div>
             {item.videos.length === 0 ? (
-              <p className="text-xs text-gray-400">저장된 영상 없음</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">저장된 영상 없음</p>
             ) : (
               <div className="space-y-2">
                 {item.videos.map((v) => (
@@ -216,10 +216,10 @@ function VideoSection({ items }: { items: VideoItem[] }) {
                       />
                     )}
                     <div className="min-w-0">
-                      <p className="text-xs font-medium text-gray-800 group-hover:text-red-600 line-clamp-2">
+                      <p className="text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-red-600 line-clamp-2">
                         {v.title}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                         {v.channelTitle} · {v.publishedAt}
                       </p>
                     </div>
@@ -243,16 +243,16 @@ export default async function ContentPage() {
   ])
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link href="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
             ← 피드로
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">생성 콘텐츠</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">생성 콘텐츠</h1>
           <Link
             href="/content/archive"
-            className="ml-auto text-sm text-blue-600 hover:text-blue-800"
+            className="ml-auto text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
           >
             주간 아카이브 →
           </Link>

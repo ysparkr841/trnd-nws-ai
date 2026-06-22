@@ -127,7 +127,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
           placeholder="피드 검색..."
-          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
       <div className="flex gap-1 mb-2 flex-wrap">
@@ -138,7 +138,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
             className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
               source === key
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
             {label}
@@ -149,7 +149,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
           className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ml-auto ${
             bookmarked
               ? 'bg-yellow-400 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
           }`}
         >
           ★ 북마크
@@ -163,7 +163,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
             className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
               search === kw
                 ? 'bg-indigo-600 text-white'
-                : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                : 'bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900'
             }`}
           >
             {kw}
@@ -172,7 +172,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
       </div>
 
       {feeds.length === 0 && !loading ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-400 dark:text-gray-500">
           <p className="text-lg">피드가 없습니다</p>
           <p className="text-sm mt-1">수집 버튼을 눌러 RSS/GitHub 소식을 가져오세요.</p>
         </div>
@@ -185,7 +185,7 @@ export function InfiniteFeeds({ initialFeeds, initialCursor }: Props) {
               <FeedCard key={feed.id} feed={feed} onToggle={toggleField} />
             )
           )}
-          <div ref={sentinelRef} className="py-6 text-center text-sm text-gray-400">
+          <div ref={sentinelRef} className="py-6 text-center text-sm text-gray-400 dark:text-gray-500">
             {loading ? '불러오는 중...' : done ? '모든 피드를 불러왔습니다' : null}
           </div>
         </div>
