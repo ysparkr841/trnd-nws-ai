@@ -87,6 +87,12 @@ export default async function ContentPage() {
             ← 피드로
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">생성 콘텐츠</h1>
+          <Link
+            href="/content/archive"
+            className="ml-auto text-sm text-blue-600 hover:text-blue-800"
+          >
+            주간 아카이브 →
+          </Link>
         </div>
 
         <ContentSection title="아티클" items={articles} type="articles" />
